@@ -22,17 +22,21 @@ object Main extends App {
                                    SnakeLeft
   )
 
+  // Sequential run
   mbSnake
     .map(snake => Game(board, snake).run(snakeMoves))
-    .map(_.bimap(showResult("You lose. I'm sorry."), showResult("You reach the target! Yay!")))
+    .map(_.fold(showResults("You lose. I'm sorry."), showResults("You reach the target! Yay!")))
     .leftMap(error => println(s"Error: $error"))
 
-  private def showResult(message: String): List[Game] => Unit = { games =>
-    games.reverse.foreach { game =>
-      game.moves.headOption.foreach(move => println(s"Move $move"))
-      game.show
-    }
-    println(message)
-  }
+  /**
+    * To run step by step uncomment the next lines
+    */
+
+//  mbSnake
+//    .map(snake => Game(board, snake))
+//    .map { game =>
+//      game.show
+//      game.stepAndShow(SnakeLeft).stepAndShow(SnakeRight).stepAndShow(SnakeLeft)
+//    }
 
 }
